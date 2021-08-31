@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity 
-@Table(name = "postagem")
+@Table(name = "tb_postagem")
 public class Postagem {
 
 	@Id 
@@ -43,6 +43,8 @@ public class Postagem {
 	@ManyToOne 
 	@JsonIgnoreProperties("postagem")
 	private Usuario usuario;
+	
+	private int curtidas;
 	
 	
 	public long getId() {
@@ -91,6 +93,14 @@ public class Postagem {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public int getCurtidas() {
+		return curtidas;
+	}
+
+	public void setCurtidas(int curtidas) {
+		this.curtidas = curtidas;
 	}
 
 }

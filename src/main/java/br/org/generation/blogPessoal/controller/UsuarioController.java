@@ -48,21 +48,21 @@ public class UsuarioController {
 				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 
-	/*@PostMapping("/cadastrar")
-	public ResponseEntity<Optional<Usuario>> Post(@RequestBody Usuario usuario){
+	@PostMapping("/cadastrar")
+	public ResponseEntity<Usuario> Post(@RequestBody Usuario usuario){
 		
-		Optional<Usuario> usuarioResp = usuarioService.cadastrarUsuario(usuario);
+		Usuario usuarioResp = usuarioService.cadastrarUsuario(usuario);
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(usuarioResp);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
 		
-	}*/
-	@PostMapping("/cadastrar")
+	}
+	/*@PostMapping("/cadastrar")
 	public ResponseEntity<Usuario> postUsuario(@RequestBody Usuario usuario) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
-	}
+	}*/
 
 	@PutMapping("/alterar")
 	public ResponseEntity<Usuario> Put (@RequestBody Usuario usuario){

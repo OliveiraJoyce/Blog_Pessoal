@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.org.generation.blogPessoal.model.Postagem;
 import br.org.generation.blogPessoal.repository.PostagemRepository;
+import br.org.generation.blogPessoal.service.PostagemService;
 
 @RestController
 @RequestMapping("/postagens")
@@ -27,6 +28,9 @@ public class PostagemController {
 
 	@Autowired
 	private PostagemRepository repository;
+	
+	@Autowired
+	private PostagemService postagemService;
 
 	// essa anotação/metodo retorna tudo que tem no banco de dados por isso é o
 	// findAll
@@ -78,6 +82,19 @@ public class PostagemController {
 			throw new ResponseStatusException(
 		          	HttpStatus.NOT_FOUND, "Postagem não encontrada!", null);
 		}
+	}
+	@PutMapping("/curtir/{id}")
+	public ResponseEntity<Postagem> putCurtirPostagemId (@PathVariable Long id){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(postagemService.curtir(id));
+	
+	}
+
+	@PutMapping("/descurtir/{id}")
+	public ResponseEntity<Postagem> putDescurtirPostagemId (@PathVariable Long id){
+		
+		return ResponseEntity.status(HttpStatus.OK).body(postagemService.descurtir(id));
+	
 	}
 	
 }	

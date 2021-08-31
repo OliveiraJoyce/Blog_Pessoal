@@ -13,6 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 import br.org.generation.blogPessoal.model.Usuario;
 import br.org.generation.blogPessoal.model.UsuarioLogin;
 import br.org.generation.blogPessoal.repository.UsuarioRepository;
+import java.time.Period;
+import java.time.LocalDate;
 
 @Service
 public class UsuarioService {
@@ -20,18 +22,26 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
+	public Usuario cadastrarUsuario(Usuario usuario) {
 
 		if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
-			return null;
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
 
+		int idade = Period.between(usuario.getDataNascimento(), LocalDate.now()).getYears();
+		
+		if(idade < 18)
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "Usuário menor de 18 anos", null);
+		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		String senhaEncoder = encoder.encode(usuario.getSenha());
 		usuario.setSenha(senhaEncoder);
 
-		return Optional.of(usuarioRepository.save(usuario));
+		return usuarioRepository.save(usuario);
 	}
+
 
 	public Optional<Usuario> atualizarUsuario(Usuario usuario) {
 
@@ -73,9 +83,13 @@ public class UsuarioService {
 				String authHeader = "Basic " + new String(encodedAuth);
 
 				usuarioLogin.get().setToken(authHeader);
+				usuarioLogin.get().setId(usuario.get().getId());
 				usuarioLogin.get().setNome(usuario.get().getNome());
 				usuarioLogin.get().setSenha(usuario.get().getSenha());
-
+				usuarioLogin.get().setTipo(usuario.get().getTipo());
+				usuarioLogin.get().setFoto(usuario.get().getFoto());
+				
+				
 				return usuarioLogin;
 
 			}
